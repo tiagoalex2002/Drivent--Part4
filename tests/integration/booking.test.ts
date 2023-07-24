@@ -79,9 +79,9 @@ beforeAll(async () => {
   
         const response = await server.get('/booking').set('Authorization', `Bearer ${token}`);
   
-        expect(response.status).toEqual(httpStatus.OK);
+        expect(response.status).toBe(httpStatus.OK);
   
-        expect(response.body).toEqual([
+        expect(response.body).toEqual(
           {
             id: createdBooking.id,
             Room : {
@@ -93,7 +93,7 @@ beforeAll(async () => {
                 updatedAt: createdRoom.updatedAt.toISOString(),
             }
           },
-        ]);
+        );
       });
   
     });
@@ -130,7 +130,6 @@ beforeAll(async () => {
         const enrollment = await createEnrollmentWithAddress(user);
         const ticketType = await createTicketTypeRemote();
         const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
-        await createPayment(ticket.id, ticketType.price);
   
         const response = await server.post('/booking').set('Authorization', `Bearer ${token}`);
   
@@ -143,7 +142,6 @@ beforeAll(async () => {
         const enrollment = await createEnrollmentWithAddress(user);
         const ticketType = await createTicketTypeWithoutHotel();
         const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
-        await createPayment(ticket.id, ticketType.price);
   
         const response = await server.post('/booking').set('Authorization', `Bearer ${token}`);
   
@@ -156,7 +154,6 @@ beforeAll(async () => {
         const enrollment = await createEnrollmentWithAddress(user);
         const ticketType = await createTicketTypeWithHotel();
         const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
-        await createPayment(ticket.id, ticketType.price);
 
         const createdHotel = await createHotel();
         await createRoomWithHotelId(createdHotel.id);
@@ -184,12 +181,11 @@ beforeAll(async () => {
         const enrollment = await createEnrollmentWithAddress(user);
         const ticketType = await createTicketTypeWithHotel();
         const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
-        await createPayment(ticket.id, ticketType.price);
 
         await createHotel();
   
   
-        const response = await server.post('/booking').set('Authorization', `Bearer ${token}`);
+        const response = await server.post('/booking').set('Authorization', `Bearer ${token}`)
   
         expect(response.status).toEqual(httpStatus.NOT_FOUND);
       });
@@ -209,7 +205,7 @@ beforeAll(async () => {
 
         const booking = await createBooking(user.id, createdRoom.id)
   
-        const response = await server.post(`/booking`).set('Authorization', `Bearer ${token}`);
+        const response = await server.post(`/booking`).set('Authorization', `Bearer ${token}`).send({ roomId: createdRoom.id });
   
         expect(response.status).toEqual(httpStatus.OK);
   
@@ -307,7 +303,7 @@ beforeAll(async () => {
     
             const booking = await createBooking(user.id, createdRoom.id)
       
-            const response = await server.put(`/booking/:bookingId`).set('Authorization', `Bearer ${token}`);
+            const response = await server.put(`/booking/:bookingId`).set('Authorization', `Bearer ${token}`).send({ roomId: createdRoom.id });
       
             expect(response.status).toEqual(httpStatus.OK);
       
