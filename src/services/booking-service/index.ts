@@ -63,7 +63,7 @@ export async function updateBooking (room : number, user: number, bookingId: num
           } else {
             if (booking) {
                 await bookingRepository.updateBooking( room, bookingId)
-                return 200;
+                return {bookingId};
             } else {
                 return 403;
             }

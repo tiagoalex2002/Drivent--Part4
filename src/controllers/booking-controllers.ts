@@ -50,7 +50,7 @@ export async function updateBooking ( req: AuthenticatedRequest, res: Response) 
         if( promise === 403) {
             return res.sendStatus(403)
         } else {
-            return res.status(200).send({bookingId: bookingId})
+            return res.status(200).send(promise)
         }
     } catch (err) {
         if (err.name === "NotFoundError") {
