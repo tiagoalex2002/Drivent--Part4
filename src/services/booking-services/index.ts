@@ -22,21 +22,30 @@ export async function getBooking( user : number) {
 
 export async function createBooking(room : number, user: number) {
 
-    if ( !room) {
+    const roomExists = await bookingRepository.getRoomById(room)
+
+    if ( !room || !roomExists) {
         throw notFoundError();
-    }
-
-    const enrollment = await enrollmentRepository.findWithAddressByUserId(user)
-    const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id)
-    const type = await ticketsRepository.findTickeWithTypeById(ticket.id)
-
-    if ( ticket.status === "PAID" && type.TicketType.includesHotel === true && type.TicketType.isRemote === false) {
-        const result = await bookingRepository.createBooking( room, user)
-        const booking = await bookingRepository.getBookings(user)
-        return booking.id;
     } else {
-        return 403;
+
+        const enrollment = await enrollmentRepository.findWithAddressByUserId(user)
+        const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id)
+        const type = await ticketsRepository.findTickeWithTypeById(ticket.id)
+
+        if ( ticket.status === "PAID" && type.TicketType.includesHotel === true && type.TicketType.isRemote === false) {
+          const bookingsAmount= await bookingRepository.getBookingsByRoomId(room)
+          if (bookingsAmount.length === roomExists.capacity) {
+            return 403;
+          } else {
+            const result = await bookingRepository.createBooking( room, user)
+            const booking = await bookingRepository.getBookings(user)
+            return booking.id;
+          }
+        } else {
+           return 403;
+        }
     }
+
 }
 
 export async function updateBooking (room : number, user: number, bookingId: number) {
@@ -44,16 +53,22 @@ export async function updateBooking (room : number, user: number, bookingId: num
     const roomExists = await bookingRepository.getRoomById(room)
     if ( !room || !roomExists) {
         throw notFoundError();
-    }
-
-    const booking = await bookingRepository.getBookings(user)
-    const roomAvailable= await bookingRepository.getBookingByRoomId(room)
-
-    if (booking && !roomAvailable) {
-        await bookingRepository.updateBooking( room, bookingId)
-        return 200;
     } else {
-        return 403;
+
+        const booking = await bookingRepository.getBookings(user)
+
+        const bookingsAmount= await bookingRepository.getBookingsByRoomId(room)
+          if (bookingsAmount.length === roomExists.capacity) {
+            return 403;
+          } else {
+            if (booking) {
+                await bookingRepository.updateBooking( room, bookingId)
+                return 200;
+            } else {
+                return 403;
+            }
+          }
+    
     }
 }
 

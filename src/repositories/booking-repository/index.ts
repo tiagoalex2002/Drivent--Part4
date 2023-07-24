@@ -16,6 +16,10 @@ async function getBookingByRoomId( Id: number) {
     return await prisma.booking.findFirst( { where : {roomId: Id}})
 }
 
+async function getBookingsByRoomId(Id:number) {
+    return await prisma.booking.findMany( { where : {roomId: Id}})
+}
+
 async function getRoomById (Id: number) {
     return await prisma.room.findUnique({where : {id : Id}})
 }
@@ -26,6 +30,7 @@ const bookingRepository = {
     createBooking,
     updateBooking,
     getBookingByRoomId,
+    getBookingsByRoomId,
     getRoomById
 }
 
