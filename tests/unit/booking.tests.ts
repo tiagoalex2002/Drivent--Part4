@@ -19,8 +19,11 @@ import {
   import enrollmentRepository from "@/repositories/enrollment-repository";
 
 
-beforeEach(() => {
-    jest.clearAllMocks();
-  });
 
-  
+
+describe("Booking Services Unit Tests", () => {
+  describe("GET /booking", () => {
+
+    it("should return 401 when token is invalid")
+  })
+  })

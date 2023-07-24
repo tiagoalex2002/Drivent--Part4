@@ -38,7 +38,7 @@ beforeAll(async () => {
     it('should respond with status 401 if given token is not valid', async () => {
       const token = faker.lorem.word();
   
-      const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
+      const response = await server.get('/booking').set('Authorization', `Bearer ${token}`);
   
       expect(response.status).toBe(httpStatus.UNAUTHORIZED);
     });
@@ -47,7 +47,7 @@ beforeAll(async () => {
       const userWithoutSession = await createUser();
       const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
   
-      const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
+      const response = await server.get('/booking').set('Authorization', `Bearer ${token}`);
   
       expect(response.status).toBe(httpStatus.UNAUTHORIZED);
     });
@@ -77,7 +77,7 @@ beforeAll(async () => {
         const createdRoom = await createRoomWithHotelId(createdHotel.id);
         const createdBooking = await createBooking(user.id, createdRoom.id)
   
-        const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
+        const response = await server.get('/booking').set('Authorization', `Bearer ${token}`);
   
         expect(response.status).toEqual(httpStatus.OK);
   
@@ -99,7 +99,7 @@ beforeAll(async () => {
     });
   });
   
-  describe('POST ', () => {
+  describe('POST  /booking', () => {
     it('should respond with status 401 if no token is given', async () => {
       const response = await server.post('/booking');
   
@@ -222,9 +222,9 @@ beforeAll(async () => {
     });
 
 
-    describe('PUT /booking', () => {
+    describe('PUT /booking/:bookingId', () => {
         it('should respond with status 401 if no token is given', async () => {
-          const response = await server.post('/booking');
+          const response = await server.put('/booking/:bookingId');
       
           expect(response.status).toBe(httpStatus.UNAUTHORIZED);
         });
@@ -232,7 +232,7 @@ beforeAll(async () => {
         it('should respond with status 401 if given token is not valid', async () => {
           const token = faker.lorem.word();
       
-          const response = await server.post('/booking').set('Authorization', `Bearer ${token}`);
+          const response = await server.put('/booking/:bookingId').set('Authorization', `Bearer ${token}`);
       
           expect(response.status).toBe(httpStatus.UNAUTHORIZED);
         });
@@ -241,7 +241,7 @@ beforeAll(async () => {
           const userWithoutSession = await createUser();
           const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
       
-          const response = await server.post('/booking').set('Authorization', `Bearer ${token}`);
+          const response = await server.put('/booking/:bookingId').set('Authorization', `Bearer ${token}`);
       
           expect(response.status).toBe(httpStatus.UNAUTHORIZED);
         });
@@ -260,7 +260,7 @@ beforeAll(async () => {
             const createdHotel = await createHotel();
             await createRoomWithHotelId(createdHotel.id);
       
-            const response = await server.post('/booking/:bookingId').set('Authorization', `Bearer ${token}`);
+            const response = await server.put('/booking/:bookingId').set('Authorization', `Bearer ${token}`);
       
             expect(response.status).toEqual(403);
           });
@@ -276,7 +276,7 @@ beforeAll(async () => {
             await createHotel();
       
       
-            const response = await server.post('/booking/:bookingId').set('Authorization', `Bearer ${token}`);
+            const response = await server.put('/booking/:bookingId').set('Authorization', `Bearer ${token}`);
       
             expect(response.status).toEqual(httpStatus.NOT_FOUND);
           });
@@ -287,7 +287,7 @@ beforeAll(async () => {
             await createEnrollmentWithAddress(user);
       
       
-            const response = await server.get('/booking/:bookingId').set('Authorization', `Bearer ${token}`);
+            const response = await server.put('/booking/:bookingId').set('Authorization', `Bearer ${token}`);
       
             expect(response.status).toEqual(httpStatus.NOT_FOUND);
           });
@@ -307,7 +307,7 @@ beforeAll(async () => {
     
             const booking = await createBooking(user.id, createdRoom.id)
       
-            const response = await server.post(`/booking/:bookingId`).set('Authorization', `Bearer ${token}`);
+            const response = await server.put(`/booking/:bookingId`).set('Authorization', `Bearer ${token}`);
       
             expect(response.status).toEqual(httpStatus.OK);
       
