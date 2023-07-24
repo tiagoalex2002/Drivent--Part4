@@ -1,4 +1,4 @@
-import bookingServices from "@/services/booking-services";
+import bookingServices from "@/services/booking-service";
 import httpStatus from "http-status";
 import {
     createEnrollmentWithAddress,
