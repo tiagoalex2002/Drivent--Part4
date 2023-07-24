@@ -42,7 +42,7 @@ export async function updateBooking ( req: AuthenticatedRequest, res: Response) 
     const userId = req.userId;
     const {roomId} = req.body;
     const booking = req.params;
-    const bookingId= Number(booking)
+    const bookingId= Number(booking.bookingId)
 
     try {
         const promise = await bookingServices.updateBooking(roomId, userId, bookingId)
