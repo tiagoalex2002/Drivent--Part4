@@ -29,7 +29,7 @@ export async function createBooking ( req: AuthenticatedRequest, res: Response) 
         if (promise === 403) {
             return res.sendStatus(403)
         } else {
-            return res.status(200).send(promise)
+            return res.status(200).send({bookingId: promise})
         }
     } catch(err) {
         if (err.name === "NotFoundError") {
@@ -50,7 +50,7 @@ export async function updateBooking ( req: AuthenticatedRequest, res: Response) 
         if( promise === 403) {
             return res.sendStatus(403)
         } else {
-            return res.status(200).send(bookingId)
+            return res.status(200).send({bookingId: bookingId})
         }
     } catch (err) {
         if (err.name === "NotFoundError") {

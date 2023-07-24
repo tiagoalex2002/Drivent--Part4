@@ -37,7 +37,7 @@ export async function createBooking(room : number, user: number) {
           if (bookingsAmount.length === roomExists.capacity) {
             return 403;
           } else {
-            const result = await bookingRepository.createBooking( room, user)
+            await bookingRepository.createBooking( room, user)
             const booking = await bookingRepository.getBookings(user)
             return booking.id;
           }
