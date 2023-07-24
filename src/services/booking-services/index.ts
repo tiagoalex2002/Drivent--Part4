@@ -40,7 +40,9 @@ export async function createBooking(room : number, user: number) {
 }
 
 export async function updateBooking (room : number, user: number, bookingId: number) {
-    if ( !room) {
+
+    const roomExists = await bookingRepository.getRoomById(room)
+    if ( !room || !roomExists) {
         throw notFoundError();
     }
 
@@ -49,7 +51,7 @@ export async function updateBooking (room : number, user: number, bookingId: num
 
     if (booking && !roomAvailable) {
         await bookingRepository.updateBooking( room, bookingId)
-        return booking;
+        return 200;
     } else {
         return 403;
     }
